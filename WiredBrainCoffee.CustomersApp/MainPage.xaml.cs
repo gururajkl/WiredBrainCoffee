@@ -1,26 +1,54 @@
-﻿using System;
-using Windows.UI.Popups;
+﻿using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WiredBrainCoffee.CustomersApp.DataProvider;
+using WiredBrainCoffee.CustomersApp.Model;
 
 namespace WiredBrainCoffee.CustomersApp
 {
     public sealed partial class MainPage : Page
     {
+        private CustomerDataProvider customerDataProvider;
+
         public MainPage()
         {
             this.InitializeComponent();
+            customerDataProvider = new CustomerDataProvider();
+            this.Loaded += MainPage_Loaded;
+            App.Current.Suspending += Current_Suspending;
         }
 
-        private async void AddCustomerButton_Click(object sender, RoutedEventArgs e)
+        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            var messageDialog = new MessageDialog("Customer added!");
-            await messageDialog.ShowAsync();
+            customerListView.Items.Clear();
+            var customersFromFile = await customerDataProvider.LoadCustomersAsync();
+            foreach (var customer in customersFromFile)
+            {
+                customerListView.Items.Add(customer);
+            }
+        }
+
+        private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+            await customerDataProvider.SaveCustomersAsync(customerListView.Items.OfType<Customer>());
+            deferral.Complete();
+        }
+
+        private void AddCustomerButton_Click(object sender, RoutedEventArgs e)
+        {
+            var customer = new Customer { Firstname = "Add new customer here" };
+            customerListView.Items.Add(customer);
+            customerListView.SelectedItem = customer;
         }
 
         private void DeleteCustomerButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var customer = customerListView.SelectedItem as Customer;
+            customerListView.Items.Remove(customer);
+            textBoxFirstname.Text = string.Empty;
+            textBoxLastname.Text = string.Empty;
+            checkBoxIsDeveloper.IsChecked = false;
         }
 
         private void ForwardButton_Click(object sender, RoutedEventArgs e)
@@ -35,6 +63,38 @@ namespace WiredBrainCoffee.CustomersApp
             Button moveForwardButton = sender as Button;
             if (newColumnValue == 2) ToolTipService.SetToolTip(moveForwardButton, "Move to left");
             else ToolTipService.SetToolTip(moveForwardButton, "Move to right");
+        }
+
+        private void CustomerListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var customer = (customerListView.SelectedValue as Customer);
+            if (customer != null)
+            {
+                textBoxFirstname.Text = customer?.Firstname ?? "";
+                textBoxLastname.Text = customer?.Lastname ?? "";
+                checkBoxIsDeveloper.IsChecked = customer.IsDeveloper;
+            }
+        }
+
+        private void IsTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateCustomer();
+        }
+
+        private void IsCheckBoxCheckedOrUnChecked(object sender, RoutedEventArgs e)
+        {
+            UpdateCustomer();
+        }
+
+        private void UpdateCustomer()
+        {
+            var customer = customerListView.SelectedValue as Customer;
+            if (customer != null)
+            {
+                customer.Firstname = textBoxFirstname.Text;
+                customer.Lastname = textBoxLastname.Text;
+                customer.IsDeveloper = checkBoxIsDeveloper.IsChecked.GetValueOrDefault();
+            }
         }
     }
 }

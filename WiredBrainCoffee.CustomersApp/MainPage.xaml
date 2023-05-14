@@ -1,9 +1,9 @@
 ﻿<Page x:Class="WiredBrainCoffee.CustomersApp.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:local="using:WiredBrainCoffee.CustomersApp"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:WiredBrainCoffee.CustomersApp.Controls"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -88,19 +88,8 @@
         </Grid>
 
         <!--Customer Details-->
-        <StackPanel Grid.Row="1"
-                    Grid.Column="1">
-            <TextBox x:Name="textBoxFirstname"
-                     TextChanged="IsTextBoxTextChanged"
-                     Margin="10" />
-            <TextBox x:Name="textBoxLastname"
-                     TextChanged="IsTextBoxTextChanged"
-                     Margin="10" />
-            <CheckBox Content="Is Developer"
-                      x:Name="checkBoxIsDeveloper"
-                      Margin="10"
-                      Checked="IsCheckBoxCheckedOrUnChecked"
-                      Unchecked="IsCheckBoxCheckedOrUnChecked" />
-        </StackPanel>
+        <controls:CustomerDetailsUserControl Grid.Row="1"
+                                             Grid.Column="1"
+                                             x:Name="customerDetailsControl"/>
     </Grid>
 </Page>

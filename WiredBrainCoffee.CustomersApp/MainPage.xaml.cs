@@ -37,7 +37,7 @@ namespace WiredBrainCoffee.CustomersApp
 
         private void AddCustomerButton_Click(object sender, RoutedEventArgs e)
         {
-            var customer = new Customer { Firstname = "Add new customer here" };
+            var customer = new Customer { Firstname = "New" };
             customerListView.Items.Add(customer);
             customerListView.SelectedItem = customer;
         }
@@ -46,9 +46,7 @@ namespace WiredBrainCoffee.CustomersApp
         {
             var customer = customerListView.SelectedItem as Customer;
             customerListView.Items.Remove(customer);
-            textBoxFirstname.Text = string.Empty;
-            textBoxLastname.Text = string.Empty;
-            checkBoxIsDeveloper.IsChecked = false;
+            customerDetailsControl.ClearTextBoxValues();
         }
 
         private void ForwardButton_Click(object sender, RoutedEventArgs e)
@@ -70,30 +68,7 @@ namespace WiredBrainCoffee.CustomersApp
             var customer = (customerListView.SelectedValue as Customer);
             if (customer != null)
             {
-                textBoxFirstname.Text = customer?.Firstname ?? "";
-                textBoxLastname.Text = customer?.Lastname ?? "";
-                checkBoxIsDeveloper.IsChecked = customer.IsDeveloper;
-            }
-        }
-
-        private void IsTextBoxTextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateCustomer();
-        }
-
-        private void IsCheckBoxCheckedOrUnChecked(object sender, RoutedEventArgs e)
-        {
-            UpdateCustomer();
-        }
-
-        private void UpdateCustomer()
-        {
-            var customer = customerListView.SelectedValue as Customer;
-            if (customer != null)
-            {
-                customer.Firstname = textBoxFirstname.Text;
-                customer.Lastname = textBoxLastname.Text;
-                customer.IsDeveloper = checkBoxIsDeveloper.IsChecked.GetValueOrDefault();
+                customerDetailsControl.Customer = customer;
             }
         }
     }

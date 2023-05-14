@@ -17,5 +17,24 @@ namespace WiredBrainCoffee.CustomersApp
             var messageDialog = new MessageDialog("Customer added!");
             await messageDialog.ShowAsync();
         }
+
+        private void DeleteCustomerButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ForwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Changing the side and the symbol value.
+            int oldColumnValue = Grid.GetColumn(customerList);
+            int newColumnValue = oldColumnValue == 0 ? 2 : 0;
+            Grid.SetColumn(customerList, newColumnValue);
+            moveIconSymbol.Symbol = newColumnValue == 2 ? Symbol.Back : Symbol.Forward;
+
+            // Changing the tooltip value
+            Button moveForwardButton = sender as Button;
+            if (newColumnValue == 2) ToolTipService.SetToolTip(moveForwardButton, "Move to left");
+            else ToolTipService.SetToolTip(moveForwardButton, "Move to right");
+        }
     }
 }

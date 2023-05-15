@@ -42,9 +42,17 @@
                        Foreground="#333333" />
         </StackPanel>
 
+        <Button Content="Toggle Theme"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="10"
+                Click="ButtonToggleTheme" />
+
         <!--Customers list-->
         <Grid Grid.Row="1"
-              x:Name="customerList">
+              x:Name="customerList"
+              Background="{ThemeResource customerListBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />

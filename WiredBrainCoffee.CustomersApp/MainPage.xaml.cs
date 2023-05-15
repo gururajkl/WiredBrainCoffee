@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
 using WiredBrainCoffee.CustomersApp.DataProvider;
 using WiredBrainCoffee.CustomersApp.Model;
 
@@ -17,6 +16,9 @@ namespace WiredBrainCoffee.CustomersApp
             customerDataProvider = new CustomerDataProvider();
             this.Loaded += MainPage_Loaded;
             App.Current.Suspending += Current_Suspending;
+            RequestedTheme = App.Current.RequestedTheme == ApplicationTheme.Dark
+                ? ElementTheme.Dark
+                : ElementTheme.Light;
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -71,6 +73,12 @@ namespace WiredBrainCoffee.CustomersApp
             {
                 customerDetailsControl.Customer = customer;
             }
+        }
+
+        private void ButtonToggleTheme(object sender, RoutedEventArgs e)
+        {
+            this.RequestedTheme = RequestedTheme == ElementTheme.Dark ? ElementTheme.Light
+                : ElementTheme.Dark;
         }
     }
 }
